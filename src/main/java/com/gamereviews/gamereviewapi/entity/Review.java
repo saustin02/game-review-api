@@ -7,24 +7,29 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "games")
+@Table(name = "reviews")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Game {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
 
     @Column(nullable = false)
-    private Integer releaseYear;
+    private Integer rating;
 
-    @Column(nullable = false)
-    private String genre;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String reviewText;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
