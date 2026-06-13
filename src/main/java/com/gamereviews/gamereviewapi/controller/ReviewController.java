@@ -5,7 +5,6 @@ import com.gamereviews.gamereviewapi.entity.Review;
 import org.springframework.web.bind.annotation.*;
 import com.gamereviews.gamereviewapi.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 
 @RestController
