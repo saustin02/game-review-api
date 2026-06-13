@@ -40,5 +40,4 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-
 }
