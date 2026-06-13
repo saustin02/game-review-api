@@ -1,6 +1,7 @@
 package com.gamereviews.gamereviewapi.service;
 
 import com.gamereviews.gamereviewapi.entity.User;
+import com.gamereviews.gamereviewapi.exception.UnauthorizedException;
 import com.gamereviews.gamereviewapi.repository.UserRepository;
 import com.gamereviews.gamereviewapi.entity.Game;
 import com.gamereviews.gamereviewapi.repository.GameRepository;
@@ -8,6 +9,8 @@ import com.gamereviews.gamereviewapi.entity.Review;
 import com.gamereviews.gamereviewapi.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.gamereviews.gamereviewapi.exception.ResourceNotFoundException;
+import com.gamereviews.gamereviewapi.exception.ValidationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,17 +32,17 @@ public class ReviewService {
         // Validation
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         Game game = gameRepository.findById(gameId).orElse(null);
         if (game == null) {
-            throw new RuntimeException("Game not found");
+            throw new ResourceNotFoundException("Game not found");
         }
         if (reviewText == null) {
-            throw new RuntimeException("You need to write a review!");
+            throw new ValidationException("You need to write a review!");
         }
         if (rating == null || rating < 1 || rating > 5) {
-            throw new RuntimeException("Invalid rating!");
+            throw new ValidationException("Invalid rating!");
         }
 
         // Create and save review
@@ -60,7 +63,7 @@ public class ReviewService {
         public List<Review> getReviewsByUser(Long userId) {
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
-            throw new RuntimeException("User does not exist");
+            throw new ResourceNotFoundException("User does not exist");
             }
             return reviewRepository.findByUser(user);
         }
@@ -69,11 +72,11 @@ public class ReviewService {
         User user = userRepository.findById(userId).orElse(null);
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review == null || user == null) {
-            throw new RuntimeException("Review id or user id is invalid!");
+            throw new ResourceNotFoundException("Review id or user id is invalid!");
         }
 
         if (!review.getUser().getId().equals(userId)) {
-            throw new RuntimeException("You do not have permission to delete review!");
+            throw new UnauthorizedException("You do not have permission to delete review!");
         }
         reviewRepository.delete(review);
         return "Review deleted";

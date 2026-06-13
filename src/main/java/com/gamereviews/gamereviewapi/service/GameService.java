@@ -1,5 +1,6 @@
 package com.gamereviews.gamereviewapi.service;
 
+import com.gamereviews.gamereviewapi.exception.ValidationException;
 import com.gamereviews.gamereviewapi.repository.GameRepository;
 import com.gamereviews.gamereviewapi.entity.Game;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,16 @@ public class GameService {
     public Game createGame(String title, Integer releaseYear, String genre) {
 
         if (title == null || title.isEmpty()) {
-            throw new RuntimeException("title is empty!");
+            throw new ValidationException("title is empty!");
         }
         if (gameRepository.findByTitle(title) != null) {
-            throw new RuntimeException("title already exists!");
+            throw new ValidationException("title already exists!");
         }
         if (releaseYear == null || releaseYear < 0 || releaseYear > LocalDate.now().getYear()) {
-            throw new RuntimeException("invalid release year!");
+            throw new ValidationException("invalid release year!");
         }
         if (genre == null || genre.isEmpty()) {
-            throw new RuntimeException("genre is empty!");
+            throw new ValidationException("genre is empty!");
         }
 
         Game game = new Game();
