@@ -3,6 +3,7 @@ package com.gamereviews.gamereviewapi.service;
 import com.gamereviews.gamereviewapi.entity.Game;
 import com.gamereviews.gamereviewapi.entity.User;
 import com.gamereviews.gamereviewapi.exception.ResourceNotFoundException;
+import com.gamereviews.gamereviewapi.exception.UnauthorizedException;
 import com.gamereviews.gamereviewapi.exception.ValidationException;
 import com.gamereviews.gamereviewapi.repository.GameRepository;
 import com.gamereviews.gamereviewapi.repository.ReviewRepository;
@@ -74,5 +75,26 @@ public class ReviewServiceTest {
         assertEquals("Great game", result.getReviewText());
         assertEquals(user, result.getUser());
         assertEquals(game, result.getGame());
+    }
+
+    @Test
+    void deleteReview_whenUserDoesNotOwnReview_throwsUnauthorizedException() {
+
+        User user = new User();
+        User user2 = new User();
+        Review review = new Review();
+        user2.setId(2L);
+        user.setId(1L);
+        review.setId(10L);
+        review.setUser(user);
+        when(reviewRepository.findById(review.getId())).thenReturn(Optional.of(review));
+        when(userRepository.findById(user2.getId())).thenReturn(Optional.of(user2));
+
+        assertThrows(UnauthorizedException.class, () -> {
+            reviewService.deleteReview(review.getId(), user2.getId());
+        });
+
+
+
     }
 }
