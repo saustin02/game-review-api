@@ -34,8 +34,16 @@ public class Review {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

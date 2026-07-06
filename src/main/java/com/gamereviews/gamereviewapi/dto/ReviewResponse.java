@@ -1,5 +1,6 @@
 package com.gamereviews.gamereviewapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,7 @@ public class ReviewResponse {
     private Integer rating;
     private String reviewText;
     private LocalDateTime createdAt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private LocalDateTime updatedAt;
 
 }

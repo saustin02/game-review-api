@@ -1,9 +1,6 @@
 package com.gamereviews.gamereviewapi.controller;
 
-import com.gamereviews.gamereviewapi.dto.GameResponse;
-import com.gamereviews.gamereviewapi.dto.ReviewRequest;
-import com.gamereviews.gamereviewapi.dto.ReviewResponse;
-import com.gamereviews.gamereviewapi.dto.ReviewUserResponse;
+import com.gamereviews.gamereviewapi.dto.*;
 import com.gamereviews.gamereviewapi.entity.Game;
 import com.gamereviews.gamereviewapi.entity.Review;
 import com.gamereviews.gamereviewapi.entity.User;
@@ -58,6 +55,15 @@ public class ReviewController {
 
     }
 
+    @PutMapping("/{reviewId}")
+    public ReviewResponse updateReview(@PathVariable Long reviewId, @RequestParam Long userId, @RequestBody ReviewUpdateRequest reviewUpdateRequest) {
+
+        Review updatedReview = reviewService.updateReview(reviewId, userId, reviewUpdateRequest.getRating(), reviewUpdateRequest.getReviewText());
+
+        return toReviewResponse(updatedReview);
+
+    }
+
     private ReviewUserResponse toReviewUserResponse(User user) {
         return new ReviewUserResponse(
                 user.getId(),
@@ -82,7 +88,8 @@ public class ReviewController {
                 toGameResponse(review.getGame()),
                 review.getRating(),
                 review.getReviewText(),
-                review.getCreatedAt()
+                review.getCreatedAt(),
+                review.getUpdatedAt()
         );
     }
 

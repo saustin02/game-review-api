@@ -2,7 +2,6 @@ package com.gamereviews.gamereviewapi.service;
 
 import com.gamereviews.gamereviewapi.entity.User;
 import com.gamereviews.gamereviewapi.exception.ResourceNotFoundException;
-import com.gamereviews.gamereviewapi.exception.UnauthorizedException;
 import com.gamereviews.gamereviewapi.exception.ValidationException;
 import com.gamereviews.gamereviewapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

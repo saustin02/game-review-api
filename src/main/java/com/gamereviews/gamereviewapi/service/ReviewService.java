@@ -61,14 +61,17 @@ public class ReviewService {
     }
 
         public List<Review> getReviewsByUser(Long userId) {
+
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
             throw new ResourceNotFoundException("User does not exist");
             }
             return reviewRepository.findByUser(user);
+
         }
 
     public String deleteReview(Long reviewId, Long userId) {
+
         User user = userRepository.findById(userId).orElse(null);
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review == null || user == null) {
@@ -80,6 +83,29 @@ public class ReviewService {
         }
         reviewRepository.delete(review);
         return "Review deleted";
+
+    }
+
+    public Review updateReview(Long reviewId, Long userId, Integer rating, String reviewText) {
+
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
+        if (review == null || user == null) {
+            throw new ResourceNotFoundException("Review or user id is invalid!");
+        }
+        if (!review.getUser().getId().equals(userId)) {
+            throw new UnauthorizedException("You do not have permission to update review!");
+        }
+        if (rating == null || rating < 1 || rating > 5) {
+            throw new ValidationException("Invalid rating!");
+        }
+        if (reviewText == null) {
+            throw new ValidationException("You need to write a review!");
+        }
+
+        review.setRating(rating);
+        review.setReviewText(reviewText);
+        return reviewRepository.save(review);
 
     }
 
